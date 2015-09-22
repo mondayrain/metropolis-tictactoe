@@ -6,8 +6,8 @@ Class for object that runs a local game, varying by:
 import pygame
 import time
 import constants
-import GameBoard 
-import MoveGenerator
+from gameboard import GameBoard 
+from movegenerator import MoveGenerator
 from random import randint
 
 class LocalGame:
@@ -24,8 +24,8 @@ class LocalGame:
         self.player = None    
         self.pc = None
         self.menu = menu
-        self.gameBoard = GameBoard.GameBoard()
-        self.AI = MoveGenerator.MoveGenerator(difficulty)
+        self.gameBoard = GameBoard()
+        self.AI = MoveGenerator(difficulty)
     
     def run_game(self):
         clock = pygame.time.Clock()

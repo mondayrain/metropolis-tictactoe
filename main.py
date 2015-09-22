@@ -9,8 +9,9 @@ Note that Menu's current_state controls what is currently happening;
 '''
 import pygame
 import constants
-import LocalGame
-import Menu
+from  localgame import LocalGame
+from menu import Menu
+from onlinegame import OnlineHostGame, OnlineClientGame
 
 '''''''''
 SET-UP
@@ -27,7 +28,7 @@ constants.BOARD_SURFACE.set_alpha(37)
 
 #Run program
 current_state = 0
-menu = Menu.Menu(screen)
+menu = Menu(screen)
 
 #Initialize Music
 current_track = menu.track
@@ -42,19 +43,28 @@ while (menu.current_state >= 0):
         if event.type == pygame.QUIT: 
             menu.current_state = -1
             
-    localGame = LocalGame.LocalGame(1, menu.diff, screen, menu)
+    localGame = LocalGame(1, menu.diff, screen, menu)
     
     if (menu.current_state == 0):
         menu.run_menu_page(screen)
         
-    if (menu.current_state == 1):
+    elif (menu.current_state == 1):
         localGame.mode = 1
         localGame.run_game()
         
-    if (menu.current_state == 2):
+    elif (menu.current_state == 2):
         localGame.mode = 2
         localGame.run_game()
+
+    elif (menu.current_state ==3):
+        onlineGame = OnlineGame()
+        localGame.run_game()
         
-    if (menu.current_state == 4):
+    elif (menu.current_state == 4):
         menu.run_settings_page(screen)
-        
+
+    # This should never happen; if so, we default to 1
+    else:
+        localGame.mode = 1
+        localGame.run_game()
+ 
