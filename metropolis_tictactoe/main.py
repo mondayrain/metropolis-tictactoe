@@ -57,8 +57,10 @@ while (menu.current_state >= 0):
         localGame.run_game()
 
     elif (menu.current_state ==3):
-        onlineGame = OnlineGame()
-        localGame.run_game()
+        # Should determine whether or not there is already a host
+        # on the LAN. If not, player becomes host and waits for someone to join.
+        # Otherwise, player is client and joins host game.
+        pass
         
     elif (menu.current_state == 4):
         menu.run_settings_page(screen)

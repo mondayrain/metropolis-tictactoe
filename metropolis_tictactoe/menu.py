@@ -104,6 +104,10 @@ class Menu:
             
         if (self.find_menu_position(mouse_x, mouse_y) == 2):
             self.current_state = 2
+
+        if (self.find_menu_position(mouse_x, mouse_y) == 3):
+            # self.current_state = 3
+            pass
         
         if (self.find_menu_position(mouse_x, mouse_y) == 4):
             self.current_state = 4
