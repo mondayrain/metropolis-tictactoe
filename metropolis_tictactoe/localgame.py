@@ -6,29 +6,27 @@ Class for object that runs a local game, varying by:
 import pygame
 import time
 import constants
+from game import Game
 from gameboard import GameBoard 
 from movegenerator import MoveGenerator
 from random import randint
 
-class LocalGame:
+
+class LocalGame(Game):
     
-    def __init__(self, mode, difficulty, screen, menu):
+    def __init__(self, screen, menu, mode, difficulty):
         """
         Constructor for a LocalGame class.
 
         Params:
         @mode = 1 or 2, repping either 1 or 2 players
-        @difficulty = "Easy", Normal", or "Hard"; onlu ised if self.mode == 1.
-        
+        @difficulty = "Easy", Normal", or "Hard"; only used if self.mode == 1.
+       
+         
         For the rest, see Game.py
         """
+        super(LocalGame, self).__init__(screen, menu)
         self.mode = mode
-        self.screen = screen
-        self.current_player = None #x always goes first
-        self.player = None    
-        self.opponent = None
-        self.menu = menu
-        self.gameboard = GameBoard()
         self.AI = MoveGenerator(difficulty)
     
     def run_game(self):
@@ -96,44 +94,7 @@ class LocalGame:
             self.player = "o"
             self.opponent = "x"
             self.current_player = self.opponent
-            
-    def check_game_over(self):
-        if ((self.gameboard.check_win(self.gameboard.x_list, constants.WIN_POSITION_LIST)) or (self.gameboard.check_win(self.gameboard.o_list, constants.WIN_POSITION_LIST))):
-            return True
-        else:
-            return False
-
-    def check_tie(self):
-        if (len(self.gameboard.taken_positions_list) == 9) and (not (self.check_game_over())):
-            return True
-        else:
-            return False
-    
-    def player_click(self, mouse_x, mouse_y):
-        b_x = constants.BOARD_COORDINATES[0]
-        b_y = constants.BOARD_COORDINATES[1]
-        if b_x < mouse_x < (b_x + constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and ((((mouse_y - b_y) // 100)*3) not in self.gameboard.taken_positions_list):
-                position = ((mouse_y - b_y) // 100)*3
-                self.gameboard.update_player_list(self.current_player, position)
-                self.switch_turns()
-        elif b_x + constants.TILE_DIMENSION < mouse_x < (b_x + 2*constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+1) not in self.gameboard.taken_positions_list)):
-                position = ((mouse_y - b_y) // 100)*3+1
-                self.gameboard.update_player_list(self.current_player, position)
-                self.switch_turns()       
-        elif b_x + 2*constants.TILE_DIMENSION < mouse_x < (b_x + 3*constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+2) not in self.gameboard.taken_positions_list)):
-                position = ((mouse_y - b_y) // 100)*3+2
-                self.gameboard.update_player_list(self.current_player, position)
-                self.switch_turns()
-        elif (constants.GAME_BACK_ARROW_COOR[0] < mouse_x < constants.GAME_BACK_ARROW_COOR[0] + constants.BACK_ARROW.get_size()[0]):
-            if (constants.GAME_BACK_ARROW_COOR[1] < mouse_y < constants.GAME_BACK_ARROW_COOR[1] + constants.BACK_ARROW.get_size()[1]):
-                self.menu.current_state = 0
-        if (constants.GAME_RESET_COOR[0] < mouse_x < constants.GAME_RESET_COOR[0] + constants.RESET.get_size()[0]):
-            if (constants.GAME_RESET_COOR[1] < mouse_y < constants.GAME_RESET_COOR[1] + constants.RESET.get_size()[1]):
-                self.reset_game()
-            
+             
     def opponent_move(self):
         if self.current_player == "x":
             AI_list = self.gameboard.x_list
@@ -146,13 +107,7 @@ class LocalGame:
         pc_move = self.AI.generate_move(AI_list, player_list, self.gameboard.taken_positions_list)
         self.gameboard.update_player_list(self.current_player, pc_move)
         self.switch_turns()
-        
-    def draw_background(self):
-        self.screen.blit(constants.BACKGROUND, (0,0))
-        self.screen.blit(constants.HEADING, constants.HEADING_COORDINATES)
-        self.screen.blit(constants.TITLE, constants.TITLE_COORDINATES)
-        self.screen.blit(constants.BOARD_SURFACE, constants.BOARD_COORDINATES)
-        
+         
     def draw_marker_hover(self, mouse_x, mouse_y):
         """
         Draw transparent hover icon when player mouse overs.
@@ -165,50 +120,3 @@ class LocalGame:
         else:
             self.draw_marker_hover_helper(mouse_x, mouse_y)
         
-    def draw_marker_hover_helper(self, mouse_x, mouse_y):
-        if (self.current_player == "x"):
-            hover_marker = constants.HOVER_EX
-        else:
-            hover_marker = constants.HOVER_OH
-        self.gameboard.draw_hover(mouse_x, mouse_y, hover_marker, self.screen, constants.BOARD_COORDINATES)
-                
-    def draw_markers(self):
-        self.gameboard.draw_markers(self.screen, constants.BOARD_COORDINATES)
-        
-    def draw_buttons(self):
-        self.screen.blit(constants.BACK_ARROW, constants.GAME_BACK_ARROW_COOR)
-        self.screen.blit(constants.RESET, constants.GAME_RESET_COOR)
-        
-    def draw_buttons_hover(self, mouse_x, mouse_y):
-        if (constants.GAME_BACK_ARROW_COOR[0] < mouse_x < constants.GAME_BACK_ARROW_COOR[0] + constants.BACK_ARROW.get_size()[0]):
-            if (constants.GAME_BACK_ARROW_COOR[1] < mouse_y < constants.GAME_BACK_ARROW_COOR[1] + constants.BACK_ARROW.get_size()[1]):
-                self.screen.blit(constants.BACK_ARROW_HOVER, constants.GAME_BACK_ARROW_COOR)
-        if (constants.GAME_RESET_COOR[0] < mouse_x < constants.GAME_RESET_COOR[0] + constants.RESET.get_size()[0]):
-            if (constants.GAME_RESET_COOR[1] < mouse_y < constants.GAME_RESET_COOR[1] + constants.RESET.get_size()[1]):
-                self.screen.blit(constants.RESET_HOVER, constants.GAME_RESET_COOR)
-    
-    def draw_win (self, given_list):
-        gset = set(given_list)
-        for item in constants.WIN_POSITION_LIST:
-            wset = set(item)
-            intersection = wset.intersection(gset)
-            if (len(intersection) == 3):
-                if (self.current_player == "x"):
-                    surface = constants.WINNING_EX
-                else:
-                    surface = constants.WINNING_OH
-                for i in intersection:
-                    
-                    self.gameboard.draw_marker(self.current_player, i, self.screen, constants.BOARD_COORDINATES, surface)
-            
-    def reset_game(self):
-        self.gameboard.x_list = []
-        self.gameboard.o_list = []
-        self.gameboard.taken_positions_list = []
-        
-    def switch_turns(self):
-        if (self.current_player == self.player):
-            self.current_player = self.opponent
-        else:
-            self.current_player = self.player 
-

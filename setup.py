@@ -13,7 +13,7 @@ long_description = 'Modern remake of the class game Tic Tac Toe, using PyGame fo
 
 setup(
     name = 'metropolis-tictactoe',
-    version = '0.5',
+    version = '1.0',
     description = 'Modern PyGame remake of Tic Tac Toe',
     long_description= long_description,
     url = 'https://github.com/mondayrain/metropolis-tictactoe',
