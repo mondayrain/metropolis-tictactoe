@@ -42,7 +42,7 @@ def main(args=None):
             if event.type == pygame.QUIT: 
                 menu.current_state = -1
             
-        localGame = LocalGame(1, menu.diff, screen, menu)
+        localGame = LocalGame(screen, menu, 1)
     
         if (menu.current_state == 0):
             menu.run_menu_page(screen)

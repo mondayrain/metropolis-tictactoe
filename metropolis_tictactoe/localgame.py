@@ -14,7 +14,7 @@ from random import randint
 
 class LocalGame(Game):
     
-    def __init__(self, screen, menu, mode, difficulty):
+    def __init__(self, screen, menu, mode):
         """
         Constructor for a LocalGame class.
 
@@ -23,11 +23,11 @@ class LocalGame(Game):
         @difficulty = "Easy", Normal", or "Hard"; only used if self.mode == 1.
        
          
-        For the rest, see Game.py
+        For the rest, see Game.py.
         """
         super(LocalGame, self).__init__(screen, menu)
         self.mode = mode
-        self.AI = MoveGenerator(difficulty)
+        self.AI = MoveGenerator(menu.diff)
     
     def run_game(self):
         clock = pygame.time.Clock()

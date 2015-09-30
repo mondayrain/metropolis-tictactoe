@@ -2,7 +2,7 @@ import pygame
 import constants
 from gameboard import GameBoard
 
-class Game:
+class Game(object):
     """
     Half-abstract class for a Tic Tac Toe Game. Provides base/common functionality
     for detecting which tile has been clicked, drawing buttons, detecting wins,
