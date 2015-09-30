@@ -172,14 +172,6 @@ class MoveGenerator:
                             return True
             return False
     
-    def change_difficulty(self, diff):
-        if (diff == "Easy"):
-            self.diff = "Easy"
-        elif (diff == "Normal"):
-            self.diff = "Normal"
-        else:
-            self.diff = "Hard"  
-    
     def other_player(self, marker):
         if (marker == "x"):
             return "o"
