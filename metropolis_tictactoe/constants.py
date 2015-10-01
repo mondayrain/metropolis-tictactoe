@@ -1,31 +1,31 @@
-'''
-Constants used by several classes
-'''
-
 import os
 import pygame
 pygame.init()
-pygame.font.init()
+pygame.font.init()	
 
-#SCREEN
+
+DIR = os.path.dirname(os.path.realpath(__file__))
+
+
+#----------
+# SETTINGS
+#----------
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-DIR = os.path.dirname(os.path.realpath(__file__))
-print DIR
 
-#Music
+
+# ----------
+# MUSIC
+# ----------
 TRACK_1 = ("Superluminal", os.path.join(DIR, "music", "Superluminal.ogg"))
 TRACK_2 = ("Any Means Necessary", os.path.join(DIR, "music", "Any_Means_Necessary.ogg"))
 TRACK_3 = ("Isham House Track", os.path.join(DIR, "music", "Isham_House_Track.ogg"))
 
-#Gameplay constants
-WIN_POSITION_LIST = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), 
-                     (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
-TILE_DIMENSION = 100
 
-print os.path.join(DIR, "fonts", "Metropolis1920.ttf")
-
-#Fonts/Text surfaces
+# ----------
+# GRAPHICS
+# ----------
+# Fonts/Text surfaces
 HEADING_FONT = pygame.font.Font(os.path.join(DIR, "fonts", "Metropolis1920.ttf"), 100)
 TITLE_FONT = pygame.font.Font(os.path.join(DIR, "fonts", "Nexa_Light.ttf"), 20)
 MARKER_FONT = pygame.font.Font(os.path.join(DIR, "fonts", "Nexa_Light.ttf"), 85)
@@ -61,7 +61,7 @@ TRACK_TWO = OPTIONS_FONT.render(TRACK_2[0], 1, (175, 175, 175))
 TRACK_THREE = OPTIONS_FONT.render(TRACK_3[0], 1, (175, 175, 175))
 
 
-#Images
+# Images
 BACKGROUND = pygame.image.load(os.path.join(DIR, "images", "background.bmp"))
 BOARD_SURFACE = pygame.image.load(os.path.join(DIR, "images", "board.bmp"))
 EX = MARKER_FONT.render("X", 1, (0,0,0))
@@ -84,12 +84,13 @@ BACK_ARROW_HOVER = BACK_ARROW_FONT.render("<-", 1, (255, 255, 255))
 RESET_HOVER = RESET_FONT.render("o", 1, (255, 255, 255))
 
 
-#Offsets
+# Offsets
 MENU_OFFSET = 33
 SETTINGS_OFFSET = 10
 ARROW_OFFSET = 15
 
-#Co-ordinates
+
+# Co-ordinates
 BOARD_COORDINATES = ((SCREEN_WIDTH - BOARD_SURFACE.get_size()[0])/2, SCREEN_HEIGHT/2 - 50)
 HEADING_COORDINATES = ((SCREEN_WIDTH - HEADING.get_size()[0])/2, 80)
 TITLE_COORDINATES = ((SCREEN_WIDTH - TITLE.get_size()[0])/2, 75 + HEADING.get_size()[1])
@@ -114,3 +115,4 @@ TRACK3_COOR = ((SCREEN_WIDTH - TRACK_THREE.get_size()[0])/2, MUSIC_COOR[1] + MUS
 GAME_BACK_ARROW_COOR = (SCREEN_WIDTH/2 + (BOARD_SURFACE.get_size()[0])/2 + ARROW_OFFSET*2,
                                                 BOARD_COORDINATES[1] + BOARD_SURFACE.get_size()[1] - ARROW_OFFSET*1.5)
 GAME_RESET_COOR = (GAME_BACK_ARROW_COOR[0]+3, GAME_BACK_ARROW_COOR[1] - ARROW_OFFSET*3)
+

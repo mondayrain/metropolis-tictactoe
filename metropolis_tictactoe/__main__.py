@@ -1,12 +1,3 @@
-'''
-Main file for running program
-Note that Menu's current_state controls what is currently happening;
-0 = main menu
-1 = 1P game
-2 = 2P game
-3 = Online game
-4 = Settings page
-'''
 import pygame
 import constants
 from  localgame import LocalGame
@@ -42,32 +33,34 @@ def main(args=None):
             if event.type == pygame.QUIT: 
                 menu.current_state = -1
             
-        localGame = LocalGame(screen, menu, 1)
-    
-        if (menu.current_state == 0):
+        if (menu.current_state == Menu.STATE_MAIN):
             menu.run_menu_page(screen)
         
-        elif (menu.current_state == 1):
-            localGame.mode = 1
-            localGame.run_game()
+        elif (menu.current_state == Menu.STATE_ONE_PLAYER):
+            game = LocalGame(screen, menu, 1)
+            game.run_game()
         
-        elif (menu.current_state == 2):
-            localGame.mode = 2
-            localGame.run_game()
+        elif (menu.current_state == Menu.STATE_TWO_PLAYER):
+            game = LocalGame(screen, menu, 2)
+            game.run_game()
 
-        elif (menu.current_state ==3):
+        elif (menu.current_state == Menu.STATE_ONLINE):
             # Should determine whether or not there is already a host
             # on the LAN. If not, player becomes host and waits for someone to join.
             # Otherwise, player is client and joins host game.
-            pass
+            IP = detect_host_ip()
+            if IP:
+               game = OnlineClientGame() 
+            else:
+               game = OnlineHostGame()
+            game.run_game()
         
-        elif (menu.current_state == 4):
+        elif (menu.current_state == Menu.STATE_SETTINGS):
             menu.run_settings_page(screen)
 
-        # This should never happen; if so, we default to 1
+        # This should never happen; if so, we stay in the menu
         else:
-            localGame.mode = 1
-            localGame.run_game()
+            menu.current_state = Menu.STATE_MAIN
 
 if __name__ == "__main__" :
     main()

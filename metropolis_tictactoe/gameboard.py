@@ -6,6 +6,10 @@ import constants
 
 class GameBoard:
 
+    TILE_DIMENSION = 100
+    WIN_POSITION_LIST = WIN_POSITION_LIST = [(0,1,2), (3,4,5), (6,7,8), (0,3,6),
+                                             (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
+
     def __init__(self):
         self.x_list = []
         self.o_list = []
@@ -25,14 +29,14 @@ class GameBoard:
     
         board_x = board_position[0]
         board_y = board_position[1]
-        h_displacement = (constants.TILE_DIMENSION - marker_surface.get_size()[0])/2
+        h_displacement = (self.TILE_DIMENSION - marker_surface.get_size()[0])/2
         v_displacement = 14
         if (0 <= position <= 2):
-            screen.blit(marker_surface, (board_x + position*constants.TILE_DIMENSION + h_displacement, board_y + v_displacement))
+            screen.blit(marker_surface, (board_x + position*self.TILE_DIMENSION + h_displacement, board_y + v_displacement))
         elif (3 <= position <= 5):
-            screen.blit(marker_surface, (board_x + (position%3)*constants.TILE_DIMENSION + h_displacement, board_y + constants.TILE_DIMENSION + v_displacement))
+            screen.blit(marker_surface, (board_x + (position%3)*self.TILE_DIMENSION + h_displacement, board_y + self.TILE_DIMENSION + v_displacement))
         else:
-            screen.blit(marker_surface, (board_x + (position%3)*constants.TILE_DIMENSION + h_displacement, board_y + 2*constants.TILE_DIMENSION + v_displacement))
+            screen.blit(marker_surface, (board_x + (position%3)*self.TILE_DIMENSION + h_displacement, board_y + 2*self.TILE_DIMENSION + v_displacement))
             
     
             
@@ -40,14 +44,14 @@ class GameBoard:
         position = self.find_position(mouse_x, mouse_y, board_position)
         if (position not in self.taken_positions_list):
             if (position >= 0):
-                h_displacement = (constants.TILE_DIMENSION - hover_marker.get_size()[0])/2
+                h_displacement = (self.TILE_DIMENSION - hover_marker.get_size()[0])/2
                 v_displacement = 14
                 if (position%3) == 0:
-                    screen.blit(hover_marker, (board_position[0] + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*constants.TILE_DIMENSION + v_displacement))
+                    screen.blit(hover_marker, (board_position[0] + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*self.TILE_DIMENSION + v_displacement))
                 elif (position%3) == 1:
-                    screen.blit(hover_marker, (board_position[0] + constants.TILE_DIMENSION + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*constants.TILE_DIMENSION + v_displacement))
+                    screen.blit(hover_marker, (board_position[0] + self.TILE_DIMENSION + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*self.TILE_DIMENSION + v_displacement))
                 elif (position%3) == 2:
-                    screen.blit(hover_marker, (board_position[0] + 2*constants.TILE_DIMENSION + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*constants.TILE_DIMENSION + v_displacement))              
+                    screen.blit(hover_marker, (board_position[0] + 2*self.TILE_DIMENSION + h_displacement, board_position[1] + ((mouse_y - board_position[1]) // 100)*self.TILE_DIMENSION + v_displacement))              
                 
     #Update x or o list with new position chosen
     #if position is already taken, return false
@@ -81,13 +85,13 @@ class GameBoard:
     #Given coordinates, find whether or not they lie within a position coordinates
     #Return -1 if not
     def find_position(self, mouse_x, mouse_y, board_position):
-        if (board_position[0] < mouse_x < (board_position[0] + constants.TILE_DIMENSION)) and (board_position[1] < mouse_y < (board_position[1] + constants.TILE_DIMENSION*3)):
+        if (board_position[0] < mouse_x < (board_position[0] + self.TILE_DIMENSION)) and (board_position[1] < mouse_y < (board_position[1] + self.TILE_DIMENSION*3)):
                     position = ((mouse_y - board_position[1]) // 100)*3
                     return position
-        if ((board_position[0] + constants.TILE_DIMENSION < mouse_x < ((board_position[0] + 2*constants.TILE_DIMENSION))) and (board_position[1] < mouse_y < (board_position[1] + constants.TILE_DIMENSION*3))):
+        if ((board_position[0] + self.TILE_DIMENSION < mouse_x < ((board_position[0] + 2*self.TILE_DIMENSION))) and (board_position[1] < mouse_y < (board_position[1] + self.TILE_DIMENSION*3))):
                     position = ((mouse_y - board_position[1]) // 100)*3+1
                     return position
-        if ((board_position[0] + 2*constants.TILE_DIMENSION < mouse_x < ((board_position[0] + 3*constants.TILE_DIMENSION))) and (board_position[1] < mouse_y < (board_position[1] + constants.TILE_DIMENSION*3))):
+        if ((board_position[0] + 2*self.TILE_DIMENSION < mouse_x < ((board_position[0] + 3*self.TILE_DIMENSION))) and (board_position[1] < mouse_y < (board_position[1] + self.TILE_DIMENSION*3))):
                     position = ((mouse_y - board_position[1]) // 100)*3+2
                     return position
         else:

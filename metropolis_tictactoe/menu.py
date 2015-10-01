@@ -7,6 +7,12 @@ import constants
 import webbrowser
 
 class Menu:
+
+    STATE_MAIN = 0
+    STATE_ONE_PLAYER = 1
+    STATE_TWO_PLAYER = 2
+    STATE_ONLINE = 3
+    STATE_SETTINGS = 4
     
     def __init__(self, screen):
         self.current_state = 0

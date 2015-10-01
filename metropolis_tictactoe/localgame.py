@@ -1,8 +1,3 @@
-'''
-Class for object that runs a local game, varying by:
-    - 1p or 2p
-    - Level of difficulty
-'''
 import pygame
 import time
 import constants
@@ -12,8 +7,13 @@ from movegenerator import MoveGenerator
 from random import randint
 
 
-class LocalGame(Game):
-    
+class LocalGame(Game):   
+    '''
+    Class for object that runs a local game, varying by:
+        - 1p or 2p
+        - Level of difficulty
+    '''
+
     def __init__(self, screen, menu, mode):
         """
         Constructor for a LocalGame class.

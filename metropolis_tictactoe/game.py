@@ -52,7 +52,7 @@ class Game(object):
         raise NotImplementedError("Subclass of Game must implement draw_marker_hover")
 
     def check_game_over(self):
-        if ((self.gameboard.check_win(self.gameboard.x_list, constants.WIN_POSITION_LIST)) or (self.gameboard.check_win(self.gameboard.o_list, constants.WIN_POSITION_LIST))):
+        if ((self.gameboard.check_win(self.gameboard.x_list, self.gameboard.WIN_POSITION_LIST)) or (self.gameboard.check_win(self.gameboard.o_list, self.gameboard.WIN_POSITION_LIST))):
             return True
         else:
             return False
@@ -99,7 +99,7 @@ class Game(object):
         markers for the winning player.
         """
         gset = set(given_list)
-        for item in constants.WIN_POSITION_LIST:
+        for item in self.gameboard.WIN_POSITION_LIST:
             wset = set(item)
             intersection = wset.intersection(gset)
             if (len(intersection) == 3):
@@ -135,18 +135,18 @@ class Game(object):
         """
         b_x = constants.BOARD_COORDINATES[0]
         b_y = constants.BOARD_COORDINATES[1]
-        if b_x < mouse_x < (b_x + constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and ((((mouse_y - b_y) // 100)*3) not in self.gameboard.taken_positions_list):
+        if b_x < mouse_x < (b_x + GameBoard.TILE_DIMENSION):
+            if (b_y < mouse_y < (b_y + GameBoard.TILE_DIMENSION*3)) and ((((mouse_y - b_y) // 100)*3) not in self.gameboard.taken_positions_list):
                 position = ((mouse_y - b_y) // 100)*3
                 self.gameboard.update_player_list(self.current_player, position)
                 self.switch_turns()
-        elif b_x + constants.TILE_DIMENSION < mouse_x < (b_x + 2*constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+1) not in self.gameboard.taken_positions_list)):
+        elif b_x + GameBoard.TILE_DIMENSION < mouse_x < (b_x + 2*GameBoard.TILE_DIMENSION):
+            if (b_y < mouse_y < (b_y + GameBoard.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+1) not in self.gameboard.taken_positions_list)):
                 position = ((mouse_y - b_y) // 100)*3+1
                 self.gameboard.update_player_list(self.current_player, position)
                 self.switch_turns()
-        elif b_x + 2*constants.TILE_DIMENSION < mouse_x < (b_x + 3*constants.TILE_DIMENSION):
-            if (b_y < mouse_y < (b_y + constants.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+2) not in self.gameboard.taken_positions_list)):
+        elif b_x + 2*GameBoard.TILE_DIMENSION < mouse_x < (b_x + 3*GameBoard.TILE_DIMENSION):
+            if (b_y < mouse_y < (b_y + GameBoard.TILE_DIMENSION*3)) and (((((mouse_y - b_y) // 100)*3+2) not in self.gameboard.taken_positions_list)):
                 position = ((mouse_y - b_y) // 100)*3+2
                 self.gameboard.update_player_list(self.current_player, position)
                 self.switch_turns()
