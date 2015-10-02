@@ -21,8 +21,7 @@ class LocalGame(Game):
         Params:
         @mode = 1 or 2, repping either 1 or 2 players
         @difficulty = "Easy", Normal", or "Hard"; only used if self.mode == 1.
-       
-         
+                
         For the rest, see Game.py.
         """
         super(LocalGame, self).__init__(screen, menu)
@@ -33,47 +32,36 @@ class LocalGame(Game):
         clock = pygame.time.Clock()
         #Determine whether AI or player goes first
         self.determine_turns()
+
         '''Game Loop'''
-        while (not (self.check_game_over() or self.check_tie()) and (self.menu.current_state != 0)):
+        while (not (self.check_game_over() or self.check_tie()) and (self.menu.current_state != self.menu.STATE_MAIN)):
             #Event Processing
             mouse_click = (0,0)
-            mouse_position = pygame.mouse.get_pos()
+            self.mouse_position = pygame.mouse.get_pos()
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT: 
                     self.menu.current_state = -1
                     return
                 if event.type == pygame.MOUSEBUTTONUP:
-                    mouse_click = mouse_position
+                    mouse_click = self.mouse_position
+
             #Logic
             if (self.mode == 1):
                 if (self.current_player == self.player):
-                    self.player_click(mouse_click[0], mouse_click[1])
+                    self.handle_player_click(mouse_click[0], mouse_click[1])
                 else:
                     self.opponent_move()
             elif (self.mode == 2):
                 try:
                     mouse_x = mouse_click[0]
                     mouse_y = mouse_click[1]
-                    self.player_click(mouse_x, mouse_y)
+                    self.handle_player_click(mouse_x, mouse_y)
                 except:
                     pass
                     
             #Drawing
-            self.draw_background()
-            self.draw_buttons()
-            self.draw_buttons_hover(mouse_position[0], mouse_position[1])
-            self.draw_marker_hover(mouse_position[0], mouse_position[1])
-            self.gameboard.draw_markers(self.screen, constants.BOARD_COORDINATES)
-            if (self.check_game_over()):
-                self.switch_turns() #Turn is switched after move, so switch back to draw winner correctly
-                if (self.current_player == "x"): 
-                    l = self.gameboard.x_list
-                else:
-                    l = self.gameboard.o_list
-                self.draw_win(l)
-                
-            pygame.display.flip()
-            
+            self.draw_game()           
+            pygame.display.flip() 
             #If the game is over, pause for a moment to let player see that game is over
             if (self.check_game_over() or self.check_tie()):
                 time.sleep(1)

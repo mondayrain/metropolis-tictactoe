@@ -10,6 +10,9 @@ class Game(object):
     subclassing Games. 
     """
 
+    SOCKET_FAILED = 0
+    SOCKET_OK = 1
+
     def __init__(self, screen, menu):
         """
         Constructor for the Game class.
@@ -29,6 +32,7 @@ class Game(object):
         self.player = None
         self.current_player = None
         self.opponent = None
+        self.mouse_position = None
 
     def determine_turns(self):
         """
@@ -69,7 +73,6 @@ class Game(object):
         self.screen.blit(constants.TITLE, constants.TITLE_COORDINATES)
         self.screen.blit(constants.BOARD_SURFACE, constants.BOARD_COORDINATES)
 
-
     def draw_marker_hover_helper(self, mouse_x, mouse_y):
         if (self.current_player == "x"):
             hover_marker = constants.HOVER_EX
@@ -108,8 +111,28 @@ class Game(object):
                 else:
                     surface = constants.WINNING_OH
                 for i in intersection:
-
                     self.gameboard.draw_marker(self.current_player, i, self.screen, constants.BOARD_COORDINATES, surface)
+
+    def draw_game(self):
+        """
+        Draws everything on the game screen in order.
+        Should be called every game loop.
+        """
+        self.draw_background()
+        self.draw_buttons()
+        self.draw_buttons_hover(self.mouse_position[0], self.mouse_position[1])
+        self.draw_marker_hover(self.mouse_position[0], self.mouse_position[1])
+        self.gameboard.draw_markers(self.screen, constants.BOARD_COORDINATES)
+    
+        if (self.check_game_over()):
+            # Turn is switched after drawing, so we must switch back
+	    # to display the player markers correctly
+            self.switch_turns()
+            if self.current_player == "x":
+                l = self.gameboard.x_list
+            else:
+                l = self.gameboard.o_list
+            self.draw_win(l)
 
     def reset_game(self):
         self.gameboard.x_list = []
@@ -122,7 +145,7 @@ class Game(object):
         else:
             self.current_player = self.player
 
-    def player_click(self, mouse_x, mouse_y):
+    def handle_player_click(self, mouse_x, mouse_y):
         """
         Functionality for responding to the active players' clicks during their turn.
         
