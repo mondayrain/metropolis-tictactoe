@@ -134,6 +134,15 @@ class Game(object):
                 l = self.gameboard.o_list
             self.draw_win(l)
 
+    def draw_message(self, message):
+        """
+        Draw a message over the current screen/gameboard
+        """
+        text = constants.MESSAGE_FONT.render(message, 1, (255, 255, 255))
+        textcoordinates = ((constants.SCREEN_WIDTH - text.get_size()[0])/2, (constants.TITLE_COORDINATES[1] + 45))
+
+        self.screen.blit(text, textcoordinates) 
+
     def reset_game(self):
         self.gameboard.x_list = []
         self.gameboard.o_list = []

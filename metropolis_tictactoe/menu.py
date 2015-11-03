@@ -5,6 +5,7 @@ Code that runs the menu page
 import pygame
 import constants
 import webbrowser
+import constants
 
 class Menu:
 
@@ -22,9 +23,10 @@ class Menu:
         self.difficulty_coor = constants.NORMAL_COOR
         self.current_track = constants.TRACK_ONE
         self.track_coor = constants.TRACK1_COOR
-        self.screen = screen
+        self.waiting = False
+        self.waiting_time = 30
     
-    def run_menu_page(self,screen):
+    def run_menu_page(self, screen):
         while(self.current_state == 0):
             mouse_position = pygame.mouse.get_pos()
             mouse_click = (0,0)
@@ -34,14 +36,9 @@ class Menu:
                     return
                 if event.type == pygame.MOUSEBUTTONUP:
                     mouse_click = mouse_position
-        
-            screen.blit(constants.BACKGROUND, (0,0))
-            screen.blit(constants.HEADING, constants.HEADING_COORDINATES)
-            screen.blit(constants.TITLE, constants.TITLE_COORDINATES)
-            self.draw_menu_markers(screen)
-            self.draw_menu_markers_hover(screen, mouse_position[0], mouse_position[1])
-            self.draw_credits(screen)
-            self.draw_credits_hover(screen, mouse_position[0], mouse_position[1])
+
+            self.draw_page(screen, mouse_position)
+ 
             try:
                 self.menu_button_clicked(mouse_click[0], mouse_click[1])
             except:
@@ -60,9 +57,9 @@ class Menu:
         if (self.find_menu_position(mouse_x, mouse_y) == 2):
             if (constants.TWO_PLAYER_COOR[1] < mouse_y < constants.TWO_PLAYER_COOR[1] + constants.TWO_PLAYER.get_size()[1]): 
                 screen.blit(constants.TWO_PLAYER_HOVER, constants.TWO_PLAYER_COOR)
-        #if (self.find_menu_position(mouse_x, mouse_y) == 3):
-        #    if (constants.ONLINE_COOR[1] < mouse_y < constants.ONLINE_COOR[1] + constants.ONLINE.get_size()[1]): 
-        #        screen.blit(constants.ONLINE_HOVER, constants.ONLINE_COOR)
+        if (self.find_menu_position(mouse_x, mouse_y) == 3):
+            if (constants.ONLINE_COOR[1] < mouse_y < constants.ONLINE_COOR[1] + constants.ONLINE.get_size()[1]): 
+                screen.blit(constants.ONLINE_HOVER, constants.ONLINE_COOR)
         if (self.find_menu_position(mouse_x, mouse_y) == 4):
             if (constants.SETTINGS_COOR[1] < mouse_y < constants.SETTINGS_COOR[1] + constants.SETTINGS.get_size()[1]): 
                 screen.blit(constants.SETTINGS_HOVER, constants.SETTINGS_COOR)
@@ -80,7 +77,31 @@ class Menu:
         if (constants.CREDITS_PHOTO_HOVER_COOR[0] < mouse_x < constants.SCREEN_WIDTH):
             if (constants.CREDITS_PHOTO_HOVER_COOR[1] < mouse_y < constants.SCREEN_HEIGHT):
                 screen.blit(constants.CREDITS_PHOTO_HOVER, constants.CREDITS_PHOTO_HOVER_COOR)    
-                
+
+    def draw_page(self, screen, mouse_position=(0,0)):
+        screen.blit(constants.BACKGROUND, (0,0))
+        screen.blit(constants.HEADING, constants.HEADING_COORDINATES)
+        screen.blit(constants.TITLE, constants.TITLE_COORDINATES)
+        self.draw_menu_markers(screen)
+        self.draw_menu_markers_hover(screen, mouse_position[0], mouse_position[1])
+
+        self.draw_credits(screen)
+        self.draw_credits_hover(screen, mouse_position[0], mouse_position[1])
+
+        if self.waiting:
+            draw_message(screen, "Searching for a game to join: %d" % self.waiting_time)
+
+    def draw_message(self, screen, message):
+       """
+       Draw a message over the current screen/gameboard.
+       TODO: This is duplicate code of Game.draw_message.
+             Should figure out a way to pull this out.
+       """
+       text = constants.MESSAGE_FONT.render(message, 1, (255, 255, 255))
+       textcoordinates = ((constants.SCREEN_WIDTH - text.get_size()[0])/2, (constants.TITLE_COORDINATES[1] + 45))
+
+       screen.blit(text, textcoordinates)
+        
     # Check if current mouse position is over a button
     # 1 = 1P, 2 = 2P, 3 = Online, 4 = Settings, 5 = Scott, 6= Stephen
     def find_menu_position(self, mouse_x, mouse_y):
@@ -112,8 +133,7 @@ class Menu:
             self.current_state = 2
 
         if (self.find_menu_position(mouse_x, mouse_y) == 3):
-            # self.current_state = 3
-            pass
+            self.current_state = 3
         
         if (self.find_menu_position(mouse_x, mouse_y) == 4):
             self.current_state = 4

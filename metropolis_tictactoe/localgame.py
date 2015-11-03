@@ -60,7 +60,7 @@ class LocalGame(Game):
                     pass
                     
             #Drawing
-            self.draw_game()           
+            self.draw_game()
             pygame.display.flip() 
             #If the game is over, pause for a moment to let player see that game is over
             if (self.check_game_over() or self.check_tie()):
