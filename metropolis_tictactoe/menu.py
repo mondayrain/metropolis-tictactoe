@@ -88,9 +88,6 @@ class Menu:
         self.draw_credits(screen)
         self.draw_credits_hover(screen, mouse_position[0], mouse_position[1])
 
-        if self.waiting:
-            draw_message(screen, "Searching for a game to join: %d" % self.waiting_time)
-
     def draw_message(self, screen, message):
        """
        Draw a message over the current screen/gameboard.

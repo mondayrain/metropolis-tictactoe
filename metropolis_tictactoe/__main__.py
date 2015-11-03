@@ -9,7 +9,7 @@ import socket
 HOST = 0
 CLIENT = 1
 HOST_WAIT_TIME = 20
-CLIENT_WAIT_TIME = 10
+CLIENT_WAIT_TIME = 15
 PORT = 63800 # Default port
              # TODO: Let user choose the port in the settings page
 
@@ -47,15 +47,18 @@ def main(args=None):
         if menu.waiting:
             if menu.waiting_time > 0:
                 menu.waiting_time -= 1
-            elif menu.waiting_time <= 0 and online_role == CLIENT:
+            elif menu.waiting_time <= 1 and online_role == CLIENT:
                 menu.waiting_time = HOST_WAIT_TIME
                 online_role = HOST
             else:
                 # Tried both being and finding a host; both failed.
                 # Terminate trying to start an online game.
+                online_role = None
                 menu.waiting = False
                 menu.waiting_time = CLIENT_WAIT_TIME
                 menu.current_state = Menu.STATE_MAIN
+                # Draw over wait message
+                menu.draw_page(screen)
 
         if (menu.current_state == Menu.STATE_MAIN):
             menu.run_menu_page(screen)
@@ -77,6 +80,7 @@ def main(args=None):
             # to start a new online game.
             if not menu.waiting:
                 menu.waiting = True
+                menu.waiting_time = CLIENT_WAIT_TIME 
                 IP = None             # IP address of client/host to connect to
                 playersocket = None         # UDP socket to use
                 online_role = CLIENT  # Player always tries to find a game first
@@ -97,6 +101,7 @@ def main(args=None):
                              playersocket.sendto("METROPOLISTICTACTOE", ('<broadcast>', PORT))
                          except socket.error:
                              menu.draw_message(screen, "Socket error: couldn't connet to a host game. Try again later.")
+                             sleep(1)
                              menu.waiting = False  
                              menu.current_state = Menu.STATE_MAIN
                     # See if any hosts have answered us 
@@ -131,7 +136,12 @@ def main(args=None):
                             pass
 
                 menu.draw_page(screen)
-                menu.draw_message(screen, "Searching for a game to join: %d" % menu.waiting_time)
+                if online_role == CLIENT: 
+                    menu.draw_message(screen, "Searching for a game to join: %d" % menu.waiting_time)
+                elif online_role == HOST:
+                    menu.draw_message(screen, "Hosting game, waiting for someone to join: %d" % menu.waiting_time)
+                sleep(1)
+
                 pygame.display.flip()
         
         elif (menu.current_state == Menu.STATE_SETTINGS):
